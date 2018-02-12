@@ -27,8 +27,12 @@ def check_user(func):
     return wrapped
 
 
-async def crosscheck_user_order(user, order_id):
+async def check_user_cafe(user, order_id):
     order = await OrderDocument.find_one({"_id": ObjectId(order_id)})
     if order.cafe != user.cafe:
         raise Forbidden(message="You don't have access to this order.")
     return order
+
+
+async def find_document_by_field(document, field_name, field_value):
+    pass

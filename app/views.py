@@ -4,9 +4,9 @@ from sanic.response import json, text
 from sanic.exceptions import Forbidden, InvalidUsage
 from sanic.views import HTTPMethodView
 
-from app.models import CafeEmployeeDocument, OrderDocument
+from app.models import OrderDocument, CafeEmployeeDocument
 from app.serializers import AuthSerializer, OrderSerializer
-from app.utils import require_json, check_user, crosscheck_user_order
+from app.utils import (require_json, check_user, check_user_cafe)
 
 
 class IndexView(HTTPMethodView):
@@ -40,13 +40,13 @@ class OrdersView(HTTPMethodView):
 class OrdersByIdView(HTTPMethodView):
     @check_user
     async def get(self, request, user, order_id):
-        order = await crosscheck_user_order(user, order_id)
+        order = await check_user_cafe(user, order_id)
         return json({"order": order.dump()}, status=200)
 
     @require_json
     @check_user
     async def put(self, request, user, order_id):
-        order = await crosscheck_user_order(user, order_id)
+        order = await check_user_cafe(user, order_id)
         serialized_order, errors = OrderSerializer().load(request.json, partial=True)
         if errors:
             raise InvalidUsage(message=f"Wrong data provided: {errors}")
@@ -56,6 +56,6 @@ class OrdersByIdView(HTTPMethodView):
 
     @check_user
     async def delete(self, request, user, order_id):
-        order = await crosscheck_user_order(user, order_id)
+        order = await check_user_cafe(user, order_id)
         await order.delete()
         return json({'order': order_id}, status=200)
