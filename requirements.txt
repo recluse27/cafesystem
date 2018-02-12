@@ -1,0 +1,7 @@
+sanic
+marshmallow
+asyncio
+envparse
+motor
+umongo
+bson
