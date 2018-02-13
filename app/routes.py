@@ -1,11 +1,18 @@
-from app.views import IndexView, LoginView, OrdersView, OrdersByIdView
+from app.views import cafe_views
 
-routes = [{"handler": IndexView, "path": "/"},
-          {"handler": LoginView, "path": "/login/"},
-          {"handler": OrdersView, "path": "/orders/"},
-          {"handler": OrdersByIdView, "path": "/orders/<order_id>/"}]
+namespaces = [
+    {"name": "/cafe",
+     "routes": [{"handler": cafe_views.IndexView, "path": "/"},
+                {"handler": cafe_views.LoginView, "path": "/login/"},
+                {"handler": cafe_views.OrdersView, "path": "/orders/"},
+                {"handler": cafe_views.OrdersByIdView, "path": "/orders/<order_id>/"}]
+     }
+]
 
 
 def add_routes(app):
-    for route in routes:
-        app.add_route(route.get('handler').as_view(), route.get('path'))
+    for namespace in namespaces:
+        name = namespace.get('name')
+        routes = namespace.get('routes')
+        for route in routes:
+            app.add_route(route.get('handler').as_view(), f"{name}{route.get('path')}")

@@ -1,12 +1,13 @@
 import uuid
 
-from sanic.response import json, text
 from sanic.exceptions import Forbidden, InvalidUsage
+from sanic.response import json, text
 from sanic.views import HTTPMethodView
 
 from app.models import OrderDocument, CafeEmployeeDocument
 from app.serializers import AuthSerializer, OrderSerializer
-from app.utils import (require_json, check_user, check_user_cafe)
+from app.utils import (require_json, check_user, check_user_cafe,
+                       make_order_with_products)
 
 
 class IndexView(HTTPMethodView):
@@ -33,7 +34,7 @@ class OrdersView(HTTPMethodView):
     @check_user
     async def get(self, request, user):
         orders_cursor = OrderDocument.find({"cafe": user.cafe})
-        orders = [order.dump() async for order in orders_cursor]
+        orders = [await make_order_with_products(order.dump()) async for order in orders_cursor]
         return json({"orders": orders}, status=200)
 
 
@@ -41,7 +42,7 @@ class OrdersByIdView(HTTPMethodView):
     @check_user
     async def get(self, request, user, order_id):
         order = await check_user_cafe(user, order_id)
-        return json({"order": order.dump()}, status=200)
+        return json({"order": await make_order_with_products(order.dump())}, status=200)
 
     @require_json
     @check_user

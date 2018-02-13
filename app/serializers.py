@@ -48,6 +48,8 @@ class OrderSerializer(Schema):
     user_id = fields.String(required=True)
     cafe = fields.Field(required=True)
     order_time = fields.DateTime(required=True)
+    code = fields.Integer(required=True)
+    price = fields.Float(required=True)
     deletion_time = fields.DateTime(default=None)
 
 

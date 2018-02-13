@@ -71,6 +71,8 @@ class OrderDocument(Document):
     cafe = fields.ObjectIdField(required=True)
     user_id = fields.StringField(required=True, unique=True)
     order_time = fields.DateTimeField(required=True)
+    code = fields.IntegerField(required=True)
+    price = fields.FloatField(required=True)
     deletion_time = fields.DateTimeField(allow_none=True)
 
 
