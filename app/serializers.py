@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields
-from marshmallow.validate import Length
+from marshmallow.validate import Length, OneOf
+from app.constants import ORDER_STATUSES
 
 
 class AuthSerializer(Schema):
@@ -49,6 +50,7 @@ class OrderSerializer(Schema):
     cafe = fields.Field(required=True)
     order_time = fields.DateTime(required=True)
     code = fields.Integer(required=True)
+    status = fields.String(required=True, validate=[OneOf(ORDER_STATUSES)])
     price = fields.Float(required=True)
     deletion_time = fields.DateTime(default=None)
 

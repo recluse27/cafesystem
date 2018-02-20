@@ -36,6 +36,7 @@
         "cafe": {"$oid": "59a811ee5f0a0a896baf56b5"},
         "order_time": {"$date": 1518443181322},
         "code": 1234,
+        "status": "payed",
         "price": 15.00,
         "deletion_time": null
     }]
